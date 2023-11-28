@@ -1,6 +1,9 @@
 package com.example.tobi_spring_v1;
 
 
+import com.example.tobi_spring_v1.dao.ConnectionMaker;
+import com.example.tobi_spring_v1.dao.DaoFactory;
+import com.example.tobi_spring_v1.dao.NConnectionMaker;
 import com.example.tobi_spring_v1.dao.UserDao;
 import com.example.tobi_spring_v1.domain.User;
 import org.springframework.boot.SpringApplication;
@@ -13,19 +16,28 @@ public class TobiSpringV1Application {
 
 	public static void main(String[] args) throws SQLException, ClassNotFoundException {
 		SpringApplication.run(TobiSpringV1Application.class, args);
+//		초난감 상태로 인한 중복 코드 분라 적용
+//		UserDao를 추상 클래스로 만들었기 때문에 인스턴스 생성 불가능
+//		UserDao dao = new UserDao();
 
-		UserDao dao = new UserDao();
+//		4. 다형성 분리로 인한 UserDao 추상 클래스 사용 불가능
+//		DUserDao dDao = new DUserDao();
 
-		User user = new User();
-		user.setId("키득");
-		user.setName("나야");
-		user.setPassword("나라고");
+//		Factory 클래스로 main에서 가지고 있던 두 개의 책임을 분리
+//		ConnectionMaker connectionMaker = new NConnectionMaker();
+//		UserDao nDao = new UserDao(connectionMaker);
 
-		dao.add(user);
+		UserDao nDao = new DaoFactory().nUserDao();
+		User nUser = new User();
+		nUser.setId("4");
+		nUser.setName("5");
+		nUser.setPassword("6");
 
-		System.out.println(user.getId() + " 등록 성공!");
+		nDao.add(nUser);
 
-		User user2 = dao.get(user.getId());
+		System.out.println(nUser.getId() + " 등록 성공!");
+
+		User user2 = nDao.get(nUser.getId());
 		System.out.println(user2.getName());
 		System.out.println(user2.getPassword());
 
