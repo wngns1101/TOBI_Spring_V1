@@ -2,6 +2,7 @@ package com.example.tobi_spring_v1.dao;
 
 import com.example.tobi_spring_v1.domain.User;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 /*
@@ -11,19 +12,28 @@ import java.sql.*;
     public abstract class UserDao {
  */
 public class UserDao {
-/*
-    3. 인터페이스 분리
-    확장성의 문제로 인한 클래스 분리를 사용하지 않고 인터페이스 사용
-    private SimpleConnectionMaker simpleConnectionMaker;
-*/
-    private ConnectionMaker connectionMaker;
+    /*
+        3. 인터페이스 분리
+        확장성의 문제로 인한 클래스 분리를 사용하지 않고 인터페이스 사용
+        private SimpleConnectionMaker simpleConnectionMaker;
+    */
+    private DataSource dataSource;
+    private ConnectionMaker connectionMaker; // 읽기전용의 정보이기 때문에 인스턴스 변수로 사용 가능
 
-    public UserDao(ConnectionMaker connectionMaker) {
-//      3. 인터페이스 분리
-//      확장성의 문제로 인한 클래스 분리를 사용하지 않고 인터페이스 사용
-//      simpleConnectionMaker = new SimpleConnectionMaker();
+//    public UserDao(ConnectionMaker connectionMaker) {
+////      3. 인터페이스 분리
+////      확장성의 문제로 인한 클래스 분리를 사용하지 않고 인터페이스 사용
+////      simpleConnectionMaker = new SimpleConnectionMaker();
+//
+////      4. 다형성 분리
+//        this.connectionMaker = connectionMaker;
+//    }
 
-//      4. 다형성 분리
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public void setConnectionMaker(ConnectionMaker connectionMaker) {
         this.connectionMaker = connectionMaker;
     }
 
@@ -39,9 +49,10 @@ public class UserDao {
 
 //      3. 인터페이스 분리
 //      확장성의 문제로 인한 클래스 분리를 사용하지 않고 인터페이스 사용
-//      Connection c = new SimpleConnectionMaker().makeNewConnection();
+//        Connection c = SimpleConnectionMaker.makeConnection();
 
-        Connection c = connectionMaker.makeConnection();
+//        Connection c = connectionMaker.makeConnection();
+        Connection c = dataSource.getConnection();
         PreparedStatement ps = c.prepareStatement("insert into user(id, name, password) values (?, ?, ?)");
 
         ps.setString(1, user.getId());
@@ -69,7 +80,7 @@ public class UserDao {
 //      확장성의 문제로 인한 클래스 분리를 사용하지 않고 인터페이스 사용
 //      Connection c = new SimpleConnectionMaker().makeNewConnection();
 
-        Connection c = connectionMaker.makeConnection();
+        Connection c = dataSource.getConnection();
 
         PreparedStatement ps = c.prepareStatement("select * from user where id = ?");
 

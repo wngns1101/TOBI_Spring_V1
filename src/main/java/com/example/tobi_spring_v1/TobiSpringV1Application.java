@@ -1,9 +1,7 @@
 package com.example.tobi_spring_v1;
 
 
-import com.example.tobi_spring_v1.dao.ConnectionMaker;
 import com.example.tobi_spring_v1.dao.DaoFactory;
-import com.example.tobi_spring_v1.dao.NConnectionMaker;
 import com.example.tobi_spring_v1.dao.UserDao;
 import com.example.tobi_spring_v1.domain.User;
 import org.springframework.boot.SpringApplication;
@@ -27,17 +25,17 @@ public class TobiSpringV1Application {
 //		ConnectionMaker connectionMaker = new NConnectionMaker();
 //		UserDao nDao = new UserDao(connectionMaker);
 
-		UserDao nDao = new DaoFactory().nUserDao();
+		UserDao dDao = new DaoFactory().userDao();
 		User nUser = new User();
 		nUser.setId("4");
 		nUser.setName("5");
 		nUser.setPassword("6");
 
-		nDao.add(nUser);
+		dDao.add(nUser);
 
 		System.out.println(nUser.getId() + " 등록 성공!");
 
-		User user2 = nDao.get(nUser.getId());
+		User user2 = dDao.get(nUser.getId());
 		System.out.println(user2.getName());
 		System.out.println(user2.getPassword());
 
