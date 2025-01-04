@@ -1,1 +1,3 @@
 rootProject.name = 'TOBI_Spring_V1'
+include 'chapter1'
+include 'chapter2'
